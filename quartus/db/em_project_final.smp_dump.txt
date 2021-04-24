@@ -1,4 +1,18 @@
 
+State Machine - |em_project_final|em_project_final_pd:PD|em_project_final_pd_mm_interconnect_1:mm_interconnect_1|altera_merlin_burst_adapter:fifo_0_in_burst_adapter|altera_merlin_burst_adapter_13_1:altera_merlin_burst_adapter_13_1.burst_adapter|state
+Name state.ST_IDLE state.ST_UNCOMP_WR_SUBBURST state.ST_UNCOMP_TRANS state.ST_COMP_TRANS 
+state.ST_IDLE 0 0 0 0 
+state.ST_COMP_TRANS 1 0 0 1 
+state.ST_UNCOMP_TRANS 1 0 1 0 
+state.ST_UNCOMP_WR_SUBBURST 1 1 0 0 
+
+State Machine - |em_project_final|em_project_final_pd:PD|em_project_final_pd_mm_interconnect_0:mm_interconnect_0|altera_merlin_burst_adapter:sdram_controller_0_s1_burst_adapter|altera_merlin_burst_adapter_13_1:altera_merlin_burst_adapter_13_1.burst_adapter|state
+Name state.ST_IDLE state.ST_UNCOMP_WR_SUBBURST state.ST_UNCOMP_TRANS state.ST_COMP_TRANS 
+state.ST_IDLE 0 0 0 0 
+state.ST_COMP_TRANS 1 0 0 1 
+state.ST_UNCOMP_TRANS 1 0 1 0 
+state.ST_UNCOMP_WR_SUBBURST 1 1 0 0 
+
 State Machine - |em_project_final|em_project_final_pd:PD|em_project_final_pd_sdram_controller_0:sdram_controller_0|m_next
 Name m_next.010000000 m_next.000010000 m_next.000001000 m_next.000000001 
 m_next.000000001 0 0 0 0 
@@ -33,6 +47,15 @@ i_state.010 0 0 0 1 0 1
 i_state.011 0 0 1 0 0 1 
 i_state.101 0 1 0 0 0 1 
 i_state.111 1 0 0 0 0 1 
+
+State Machine - |em_project_final|em_project_final_pd:PD|em_project_final_pd_pll_sdram:pll_sdram|altera_pll:altera_pll_i|dps_extra_kick:dps_extra_inst|dps_current_state
+Name dps_current_state.PHASE_DONE_LOW_0 dps_current_state.PHASE_DONE_LOW_4 dps_current_state.PHASE_DONE_LOW_3 dps_current_state.PHASE_DONE_LOW_2 dps_current_state.PHASE_DONE_LOW_1 dps_current_state.PHASE_DONE_HIGH 
+dps_current_state.PHASE_DONE_HIGH 0 0 0 0 0 0 
+dps_current_state.PHASE_DONE_LOW_1 0 0 0 0 1 1 
+dps_current_state.PHASE_DONE_LOW_2 0 0 0 1 0 1 
+dps_current_state.PHASE_DONE_LOW_3 0 0 1 0 0 1 
+dps_current_state.PHASE_DONE_LOW_4 0 1 0 0 0 1 
+dps_current_state.PHASE_DONE_LOW_0 1 0 0 0 0 1 
 
 State Machine - |em_project_final|em_project_final_pd:PD|altera_pll_reconfig_top:pll_reconfig_0|altera_pll_reconfig_core:NM28_reconfig.reconfig_core.altera_pll_reconfig_core_inst0|current_read_state
 Name current_read_state.READ_POST_WAIT current_read_state.READ current_read_state.READ_WAIT current_read_state.READ_IDLE 
@@ -83,15 +106,6 @@ dps_current_state.DPS_START 0 0 0 1 0 1
 dps_current_state.DPS_WAIT_PHASE_EN 0 0 1 0 0 1 
 dps_current_state.DPS_WAIT_DPRIO_WRITING 0 1 0 0 0 1 
 dps_current_state.DPS_CHANGED 1 0 0 0 0 1 
-
-State Machine - |em_project_final|em_project_final_pd:PD|em_project_final_pd_pll_0:pll_0|altera_pll:altera_pll_i|dps_extra_kick:dps_extra_inst|dps_current_state
-Name dps_current_state.PHASE_DONE_LOW_0 dps_current_state.PHASE_DONE_LOW_4 dps_current_state.PHASE_DONE_LOW_3 dps_current_state.PHASE_DONE_LOW_2 dps_current_state.PHASE_DONE_LOW_1 dps_current_state.PHASE_DONE_HIGH 
-dps_current_state.PHASE_DONE_HIGH 0 0 0 0 0 0 
-dps_current_state.PHASE_DONE_LOW_1 0 0 0 0 1 1 
-dps_current_state.PHASE_DONE_LOW_2 0 0 0 1 0 1 
-dps_current_state.PHASE_DONE_LOW_3 0 0 1 0 0 1 
-dps_current_state.PHASE_DONE_LOW_4 0 1 0 0 0 1 
-dps_current_state.PHASE_DONE_LOW_0 1 0 0 0 0 1 
 
 State Machine - |em_project_final|em_project_final_pd:PD|em_project_final_pd_master_0:master_0|altera_avalon_packets_to_master:transacto|packets_to_master:p2m|state
 Name state.READ_SEND_WAIT state.READ_SEND_ISSUE state.READ_DATA_WAIT state.READ_CMD_WAIT state.READ_ASSERT state.RETURN_PACKET state.WRITE_WAIT state.GET_WRITE_DATA state.GET_ADDR4 state.GET_ADDR3 state.GET_ADDR2 state.GET_ADDR1 state.GET_SIZE2 state.GET_SIZE1 state.GET_EXTRA state.0000 

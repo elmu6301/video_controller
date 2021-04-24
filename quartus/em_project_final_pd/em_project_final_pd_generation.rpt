@@ -4,42 +4,74 @@ Progress: Loading quartus/em_project_final_pd.qsys
 Progress: Reading input file
 Progress: Adding clk_0 [clock_source 20.1]
 Progress: Parameterizing module clk_0
+Progress: Adding dma_0 [altera_avalon_dma 20.1]
+Progress: Parameterizing module dma_0
+Progress: Adding fifo_0 [altera_avalon_fifo 20.1]
+Progress: Parameterizing module fifo_0
 Progress: Adding master_0 [altera_jtag_avalon_master 20.1]
 Progress: Parameterizing module master_0
 Progress: Adding pio_0 [altera_avalon_pio 20.1]
 Progress: Parameterizing module pio_0
-Progress: Adding pll_0 [altera_pll 20.1]
-Progress: Parameterizing module pll_0
 Progress: Adding pll_reconfig_0 [altera_pll_reconfig 20.1]
 Progress: Parameterizing module pll_reconfig_0
+Progress: Adding pll_rfr [altera_pll 20.1]
+Progress: Parameterizing module pll_rfr
+Progress: Adding pll_sdram [altera_pll 20.1]
+Progress: Parameterizing module pll_sdram
 Progress: Adding sdram_controller_0 [altera_avalon_new_sdram_controller 20.1]
 Progress: Parameterizing module sdram_controller_0
 Progress: Building connections
 Progress: Parameterizing connections
 Progress: Validating
 Progress: Done reading input file
-Info: em_project_final_pd.pll_0: The legal reference clock frequency is 5.0 MHz..800.0 MHz
-Warning: em_project_final_pd.pll_0: Able to implement PLL - Actual settings differ from Requested settings
+Info: em_project_final_pd.dma_0: DMA Controller will only be supported in Quartus Prime Standard Edition in the future release.
+Info: em_project_final_pd.fifo_0: For Avalon-ST and Avalon-MM combinations, data width is 32 bits.
+Info: em_project_final_pd.pll_rfr: The legal reference clock frequency is 5.0 MHz..800.0 MHz
+Warning: em_project_final_pd.pll_rfr: Able to implement PLL - Actual settings differ from Requested settings
+Info: em_project_final_pd.pll_sdram: The legal reference clock frequency is 5.0 MHz..800.0 MHz
+Warning: em_project_final_pd.pll_sdram: Able to implement PLL - Actual settings differ from Requested settings
 Info: em_project_final_pd.sdram_controller_0: SDRAM Controller will only be supported in Quartus Prime Standard Edition in the future release.
+Warning: em_project_final_pd.dma_0: Interrupt sender dma_0.irq is not connected to an interrupt receiver
+Warning: em_project_final_pd.fifo_0: Interrupt sender fifo_0.in_irq is not connected to an interrupt receiver
+Warning: em_project_final_pd.fifo_0: fifo_0.in_csr must be connected to an Avalon-MM master
+Warning: em_project_final_pd.: You have exported the interface fifo_0.out but not its associated clock interface.  Export fifo_0.clk_out
 Info: em_project_final_pd: Generating em_project_final_pd "em_project_final_pd" for QUARTUS_SYNTH
-Info: Inserting clock-crossing logic between cmd_demux.src0 and cmd_mux.sink0
-Info: Inserting clock-crossing logic between rsp_demux.src0 and rsp_mux.sink0
+Info: Inserting clock-crossing logic between cmd_demux.src1 and cmd_mux_001.sink0
+Info: Inserting clock-crossing logic between rsp_demux_001.src0 and rsp_mux.sink1
+Info: Interconnect is inserted between master dma_0.write_master and slave fifo_0.in because the master has address signal 31 bit wide, but the slave is 1 bit wide.
+Info: Interconnect is inserted between master dma_0.write_master and slave fifo_0.in because the master has chipselect signal 1 bit wide, but the slave is 0 bit wide.
+Info: Interconnect is inserted between master dma_0.write_master and slave fifo_0.in because the master has byteenable signal 4 bit wide, but the slave is 0 bit wide.
+Info: Interconnect is inserted between master dma_0.write_master and slave fifo_0.in because the master has burstcount signal 8 bit wide, but the slave is 0 bit wide.
+Info: dma_0: softresetEnable = 1
+Info: dma_0: Starting RTL generation for module 'em_project_final_pd_dma_0'
+Info: dma_0:   Generation command is [exec C:/intelFPGA/20.1/quartus/bin64//perl/bin/perl.exe -I C:/intelFPGA/20.1/quartus/bin64//perl/lib -I C:/intelfpga/20.1/quartus/sopc_builder/bin/europa -I C:/intelfpga/20.1/quartus/sopc_builder/bin -I C:/intelfpga/20.1/quartus/../ip/altera/sopc_builder_ip/common -I C:/intelfpga/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_dma -- C:/intelfpga/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_dma/generate_rtl.pl --name=em_project_final_pd_dma_0 --dir=C:/Users/elena/AppData/Local/Temp/alt8741_9021811168177068816.dir/0002_dma_0_gen/ --quartus_dir=C:/intelfpga/20.1/quartus --verilog --config=C:/Users/elena/AppData/Local/Temp/alt8741_9021811168177068816.dir/0002_dma_0_gen//em_project_final_pd_dma_0_component_configuration.pl  --do_build_sim=0  ]
+Info: dma_0: # 2021.04.24 15:53:53 (*)   em_project_final_pd_dma_0: allowing these transactions: word, byte_access
+Info: dma_0: Done RTL generation for module 'em_project_final_pd_dma_0'
+Info: dma_0: "em_project_final_pd" instantiated altera_avalon_dma "dma_0"
+Info: fifo_0: Starting RTL generation for module 'em_project_final_pd_fifo_0'
+Info: fifo_0:   Generation command is [exec C:/intelfpga/20.1/quartus/bin64/perl/bin/perl.exe -I C:/intelfpga/20.1/quartus/bin64/perl/lib -I C:/intelfpga/20.1/quartus/sopc_builder/bin/europa -I C:/intelfpga/20.1/quartus/sopc_builder/bin -I C:/intelfpga/20.1/quartus/../ip/altera/sopc_builder_ip/common -I C:/intelfpga/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_fifo -- C:/intelfpga/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_fifo/generate_rtl.pl --name=em_project_final_pd_fifo_0 --dir=C:/Users/elena/AppData/Local/Temp/alt8741_9021811168177068816.dir/0003_fifo_0_gen/ --quartus_dir=C:/intelfpga/20.1/quartus --verilog --config=C:/Users/elena/AppData/Local/Temp/alt8741_9021811168177068816.dir/0003_fifo_0_gen//em_project_final_pd_fifo_0_component_configuration.pl  --do_build_sim=0  ]
+Info: fifo_0: Done RTL generation for module 'em_project_final_pd_fifo_0'
+Info: fifo_0: "em_project_final_pd" instantiated altera_avalon_fifo "fifo_0"
 Info: master_0: "em_project_final_pd" instantiated altera_jtag_avalon_master "master_0"
 Info: pio_0: Starting RTL generation for module 'em_project_final_pd_pio_0'
-Info: pio_0:   Generation command is [exec C:/intelfpga/20.1/quartus/bin64/perl/bin/perl.exe -I C:/intelfpga/20.1/quartus/bin64/perl/lib -I C:/intelfpga/20.1/quartus/sopc_builder/bin/europa -I C:/intelfpga/20.1/quartus/sopc_builder/bin -I C:/intelfpga/20.1/quartus/../ip/altera/sopc_builder_ip/common -I C:/intelfpga/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio -- C:/intelfpga/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio/generate_rtl.pl --name=em_project_final_pd_pio_0 --dir=C:/Users/elena/AppData/Local/Temp/alt8741_8827575877813647556.dir/0002_pio_0_gen/ --quartus_dir=C:/intelfpga/20.1/quartus --verilog --config=C:/Users/elena/AppData/Local/Temp/alt8741_8827575877813647556.dir/0002_pio_0_gen//em_project_final_pd_pio_0_component_configuration.pl  --do_build_sim=0  ]
+Info: pio_0:   Generation command is [exec C:/intelfpga/20.1/quartus/bin64/perl/bin/perl.exe -I C:/intelfpga/20.1/quartus/bin64/perl/lib -I C:/intelfpga/20.1/quartus/sopc_builder/bin/europa -I C:/intelfpga/20.1/quartus/sopc_builder/bin -I C:/intelfpga/20.1/quartus/../ip/altera/sopc_builder_ip/common -I C:/intelfpga/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio -- C:/intelfpga/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio/generate_rtl.pl --name=em_project_final_pd_pio_0 --dir=C:/Users/elena/AppData/Local/Temp/alt8741_9021811168177068816.dir/0004_pio_0_gen/ --quartus_dir=C:/intelfpga/20.1/quartus --verilog --config=C:/Users/elena/AppData/Local/Temp/alt8741_9021811168177068816.dir/0004_pio_0_gen//em_project_final_pd_pio_0_component_configuration.pl  --do_build_sim=0  ]
 Info: pio_0: Done RTL generation for module 'em_project_final_pd_pio_0'
 Info: pio_0: "em_project_final_pd" instantiated altera_avalon_pio "pio_0"
-Info: pll_0: "em_project_final_pd" instantiated altera_pll "pll_0"
 Warning: quartus_synth: A Duplicate file was overwritten with path: altera_pll_reconfig_top.v
 Info: pll_reconfig_0: "em_project_final_pd" instantiated altera_pll_reconfig "pll_reconfig_0"
+Info: pll_rfr: "em_project_final_pd" instantiated altera_pll "pll_rfr"
+Info: pll_sdram: "em_project_final_pd" instantiated altera_pll "pll_sdram"
 Info: sdram_controller_0: Starting RTL generation for module 'em_project_final_pd_sdram_controller_0'
-Info: sdram_controller_0:   Generation command is [exec C:/intelfpga/20.1/quartus/bin64/perl/bin/perl.exe -I C:/intelfpga/20.1/quartus/bin64/perl/lib -I C:/intelfpga/20.1/quartus/sopc_builder/bin/europa -I C:/intelfpga/20.1/quartus/sopc_builder/bin -I C:/intelfpga/20.1/quartus/../ip/altera/sopc_builder_ip/common -I C:/intelfpga/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_new_sdram_controller -- C:/intelfpga/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_new_sdram_controller/generate_rtl.pl --name=em_project_final_pd_sdram_controller_0 --dir=C:/Users/elena/AppData/Local/Temp/alt8741_8827575877813647556.dir/0005_sdram_controller_0_gen/ --quartus_dir=C:/intelfpga/20.1/quartus --verilog --config=C:/Users/elena/AppData/Local/Temp/alt8741_8827575877813647556.dir/0005_sdram_controller_0_gen//em_project_final_pd_sdram_controller_0_component_configuration.pl  --do_build_sim=0  ]
+Info: sdram_controller_0:   Generation command is [exec C:/intelfpga/20.1/quartus/bin64/perl/bin/perl.exe -I C:/intelfpga/20.1/quartus/bin64/perl/lib -I C:/intelfpga/20.1/quartus/sopc_builder/bin/europa -I C:/intelfpga/20.1/quartus/sopc_builder/bin -I C:/intelfpga/20.1/quartus/../ip/altera/sopc_builder_ip/common -I C:/intelfpga/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_new_sdram_controller -- C:/intelfpga/20.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_new_sdram_controller/generate_rtl.pl --name=em_project_final_pd_sdram_controller_0 --dir=C:/Users/elena/AppData/Local/Temp/alt8741_9021811168177068816.dir/0008_sdram_controller_0_gen/ --quartus_dir=C:/intelfpga/20.1/quartus --verilog --config=C:/Users/elena/AppData/Local/Temp/alt8741_9021811168177068816.dir/0008_sdram_controller_0_gen//em_project_final_pd_sdram_controller_0_component_configuration.pl  --do_build_sim=0  ]
 Info: sdram_controller_0: Done RTL generation for module 'em_project_final_pd_sdram_controller_0'
 Info: sdram_controller_0: "em_project_final_pd" instantiated altera_avalon_new_sdram_controller "sdram_controller_0"
 Info: avalon_st_adapter: Inserting error_adapter: error_adapter_0
 Info: avalon_st_adapter_001: Inserting error_adapter: error_adapter_0
 Info: avalon_st_adapter_002: Inserting error_adapter: error_adapter_0
+Info: avalon_st_adapter_003: Inserting error_adapter: error_adapter_0
 Info: mm_interconnect_0: "em_project_final_pd" instantiated altera_mm_interconnect "mm_interconnect_0"
+Info: avalon_st_adapter: Inserting error_adapter: error_adapter_0
+Info: mm_interconnect_1: "em_project_final_pd" instantiated altera_mm_interconnect "mm_interconnect_1"
 Info: rst_controller: "em_project_final_pd" instantiated altera_reset_controller "rst_controller"
 Info: jtag_phy_embedded_in_jtag_master: "master_0" instantiated altera_jtag_dc_streaming "jtag_phy_embedded_in_jtag_master"
 Info: timing_adt: "master_0" instantiated timing_adapter "timing_adt"
@@ -50,12 +82,13 @@ Info: transacto: "master_0" instantiated altera_avalon_packets_to_master "transa
 Info: b2p_adapter: "master_0" instantiated channel_adapter "b2p_adapter"
 Info: p2b_adapter: "master_0" instantiated channel_adapter "p2b_adapter"
 Info: master_0_master_translator: "mm_interconnect_0" instantiated altera_merlin_master_translator "master_0_master_translator"
-Info: pll_reconfig_0_mgmt_avalon_slave_translator: "mm_interconnect_0" instantiated altera_merlin_slave_translator "pll_reconfig_0_mgmt_avalon_slave_translator"
+Info: dma_0_control_port_slave_translator: "mm_interconnect_0" instantiated altera_merlin_slave_translator "dma_0_control_port_slave_translator"
 Info: master_0_master_agent: "mm_interconnect_0" instantiated altera_merlin_master_agent "master_0_master_agent"
-Info: pll_reconfig_0_mgmt_avalon_slave_agent: "mm_interconnect_0" instantiated altera_merlin_slave_agent "pll_reconfig_0_mgmt_avalon_slave_agent"
+Info: dma_0_control_port_slave_agent: "mm_interconnect_0" instantiated altera_merlin_slave_agent "dma_0_control_port_slave_agent"
 Info: router: "mm_interconnect_0" instantiated altera_merlin_router "router"
 Info: router_001: "mm_interconnect_0" instantiated altera_merlin_router "router_001"
-Info: router_003: "mm_interconnect_0" instantiated altera_merlin_router "router_003"
+Info: router_002: "mm_interconnect_0" instantiated altera_merlin_router "router_002"
+Info: router_005: "mm_interconnect_0" instantiated altera_merlin_router "router_005"
 Info: master_0_master_limiter: "mm_interconnect_0" instantiated altera_merlin_traffic_limiter "master_0_master_limiter"
 Info: Reusing file C:/Users/elena/Documents/quartus_workspace/em_project_final/quartus/em_project_final_pd/synthesis/submodules/altera_avalon_sc_fifo.v
 Info: Reusing file C:/Users/elena/Documents/quartus_workspace/em_project_final/quartus/em_project_final_pd/synthesis/submodules/altera_avalon_st_pipeline_base.v
@@ -63,10 +96,15 @@ Info: sdram_controller_0_s1_burst_adapter: "mm_interconnect_0" instantiated alte
 Info: Reusing file C:/Users/elena/Documents/quartus_workspace/em_project_final/quartus/em_project_final_pd/synthesis/submodules/altera_avalon_st_pipeline_stage.sv
 Info: Reusing file C:/Users/elena/Documents/quartus_workspace/em_project_final/quartus/em_project_final_pd/synthesis/submodules/altera_avalon_st_pipeline_base.v
 Info: cmd_demux: "mm_interconnect_0" instantiated altera_merlin_demultiplexer "cmd_demux"
+Info: cmd_demux_001: "mm_interconnect_0" instantiated altera_merlin_demultiplexer "cmd_demux_001"
 Info: cmd_mux: "mm_interconnect_0" instantiated altera_merlin_multiplexer "cmd_mux"
-Info: rsp_demux: "mm_interconnect_0" instantiated altera_merlin_demultiplexer "rsp_demux"
+Info: cmd_mux_003: "mm_interconnect_0" instantiated altera_merlin_multiplexer "cmd_mux_003"
+Info: Reusing file C:/Users/elena/Documents/quartus_workspace/em_project_final/quartus/em_project_final_pd/synthesis/submodules/altera_merlin_arbitrator.sv
 Info: rsp_demux_001: "mm_interconnect_0" instantiated altera_merlin_demultiplexer "rsp_demux_001"
+Info: rsp_demux_003: "mm_interconnect_0" instantiated altera_merlin_demultiplexer "rsp_demux_003"
 Info: rsp_mux: "mm_interconnect_0" instantiated altera_merlin_multiplexer "rsp_mux"
+Info: Reusing file C:/Users/elena/Documents/quartus_workspace/em_project_final/quartus/em_project_final_pd/synthesis/submodules/altera_merlin_arbitrator.sv
+Info: rsp_mux_001: "mm_interconnect_0" instantiated altera_merlin_multiplexer "rsp_mux_001"
 Info: Reusing file C:/Users/elena/Documents/quartus_workspace/em_project_final/quartus/em_project_final_pd/synthesis/submodules/altera_merlin_arbitrator.sv
 Info: sdram_controller_0_s1_rsp_width_adapter: "mm_interconnect_0" instantiated altera_merlin_width_adapter "sdram_controller_0_s1_rsp_width_adapter"
 Info: Reusing file C:/Users/elena/Documents/quartus_workspace/em_project_final/quartus/em_project_final_pd/synthesis/submodules/altera_merlin_address_alignment.sv
@@ -76,9 +114,16 @@ Info: Reusing file C:/Users/elena/Documents/quartus_workspace/em_project_final/q
 Info: Reusing file C:/Users/elena/Documents/quartus_workspace/em_project_final/quartus/em_project_final_pd/synthesis/submodules/altera_avalon_st_pipeline_base.v
 Info: Reusing file C:/Users/elena/Documents/quartus_workspace/em_project_final/quartus/em_project_final_pd/synthesis/submodules/altera_std_synchronizer_nocut.v
 Info: avalon_st_adapter: "mm_interconnect_0" instantiated altera_avalon_st_adapter "avalon_st_adapter"
-Info: avalon_st_adapter_002: "mm_interconnect_0" instantiated altera_avalon_st_adapter "avalon_st_adapter_002"
+Info: avalon_st_adapter_003: "mm_interconnect_0" instantiated altera_avalon_st_adapter "avalon_st_adapter_003"
+Info: router: "mm_interconnect_1" instantiated altera_merlin_router "router"
+Info: router_001: "mm_interconnect_1" instantiated altera_merlin_router "router_001"
+Info: cmd_demux: "mm_interconnect_1" instantiated altera_merlin_demultiplexer "cmd_demux"
+Info: cmd_mux: "mm_interconnect_1" instantiated altera_merlin_multiplexer "cmd_mux"
+Info: Reusing file C:/Users/elena/Documents/quartus_workspace/em_project_final/quartus/em_project_final_pd/synthesis/submodules/altera_merlin_arbitrator.sv
+Info: rsp_mux: "mm_interconnect_1" instantiated altera_merlin_multiplexer "rsp_mux"
+Info: Reusing file C:/Users/elena/Documents/quartus_workspace/em_project_final/quartus/em_project_final_pd/synthesis/submodules/altera_merlin_arbitrator.sv
 Info: error_adapter_0: "avalon_st_adapter" instantiated error_adapter "error_adapter_0"
-Info: error_adapter_0: "avalon_st_adapter_002" instantiated error_adapter "error_adapter_0"
-Info: em_project_final_pd: Done "em_project_final_pd" with 36 modules, 62 files
+Info: error_adapter_0: "avalon_st_adapter_003" instantiated error_adapter "error_adapter_0"
+Info: em_project_final_pd: Done "em_project_final_pd" with 49 modules, 77 files
 Info: qsys-generate succeeded.
 Info: Finished: Create HDL design files for synthesis

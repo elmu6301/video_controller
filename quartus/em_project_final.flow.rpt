@@ -1,5 +1,5 @@
 Flow report for em_project_final
-Sat Apr 24 12:26:58 2021
+Sat Apr 24 17:26:49 2021
 Quartus Prime Version 20.1.1 Build 720 11/11/2020 SJ Standard Edition
 
 
@@ -41,15 +41,15 @@ https://fpgasoftware.intel.com/eula.
 +-----------------------------------------------------------------------------------+
 ; Flow Summary                                                                      ;
 +---------------------------------+-------------------------------------------------+
-; Flow Status                     ; Successful - Sat Apr 24 12:26:21 2021           ;
+; Flow Status                     ; Successful - Sat Apr 24 17:26:07 2021           ;
 ; Quartus Prime Version           ; 20.1.1 Build 720 11/11/2020 SJ Standard Edition ;
 ; Revision Name                   ; em_project_final                                ;
 ; Top-level Entity Name           ; em_project_final                                ;
 ; Family                          ; Cyclone V                                       ;
 ; Device                          ; 5CSXFC6D6F31C6                                  ;
 ; Timing Models                   ; Final                                           ;
-; Logic utilization (in ALMs)     ; 1,531 / 41,910 ( 4 % )                          ;
-; Total registers                 ; 2016                                            ;
+; Logic utilization (in ALMs)     ; 2,069 / 41,910 ( 5 % )                          ;
+; Total registers                 ; 2789                                            ;
 ; Total pins                      ; 93 / 499 ( 19 % )                               ;
 ; Total virtual pins              ; 0                                               ;
 ; Total block memory bits         ; 640 / 5,662,720 ( < 1 % )                       ;
@@ -58,7 +58,7 @@ https://fpgasoftware.intel.com/eula.
 ; Total HSSI PMA RX Deserializers ; 0 / 9 ( 0 % )                                   ;
 ; Total HSSI TX PCSs              ; 0 / 9 ( 0 % )                                   ;
 ; Total HSSI PMA TX Serializers   ; 0 / 9 ( 0 % )                                   ;
-; Total PLLs                      ; 1 / 15 ( 7 % )                                  ;
+; Total PLLs                      ; 2 / 15 ( 13 % )                                 ;
 ; Total DLLs                      ; 0 / 4 ( 0 % )                                   ;
 +---------------------------------+-------------------------------------------------+
 
@@ -68,7 +68,7 @@ https://fpgasoftware.intel.com/eula.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 04/24/2021 12:19:12 ;
+; Start date & time ; 04/24/2021 17:19:16 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; em_project_final    ;
 +-------------------+---------------------+
@@ -79,7 +79,7 @@ https://fpgasoftware.intel.com/eula.
 +-------------------------------------+-----------------------------------------------------------------------+---------------+---------------------+------------+
 ; Assignment Name                     ; Value                                                                 ; Default Value ; Entity Name         ; Section Id ;
 +-------------------------------------+-----------------------------------------------------------------------+---------------+---------------------+------------+
-; COMPILER_SIGNATURE_ID               ; 207273074477957.161928835211720                                       ; --            ; --                  ; --         ;
+; COMPILER_SIGNATURE_ID               ; 207273074477957.161930635514672                                       ; --            ; --                  ; --         ;
 ; MAX_CORE_JUNCTION_TEMP              ; 85                                                                    ; --            ; --                  ; --         ;
 ; MIN_CORE_JUNCTION_TEMP              ; 0                                                                     ; --            ; --                  ; --         ;
 ; MISC_FILE                           ; em_project_final_pd/synthesis/../em_project_final_pd.cmp              ; --            ; --                  ; --         ;
@@ -91,7 +91,7 @@ https://fpgasoftware.intel.com/eula.
 ; POWER_PRESET_COOLING_SOLUTION       ; 23 MM HEAT SINK WITH 200 LFPM AIRFLOW                                 ; --            ; --                  ; --         ;
 ; SLD_FILE                            ; em_project_final_pd/synthesis/em_project_final_pd.regmap              ; --            ; --                  ; --         ;
 ; SLD_FILE                            ; em_project_final_pd/synthesis/em_project_final_pd.debuginfo           ; --            ; --                  ; --         ;
-; SLD_INFO                            ; QSYS_NAME em_project_final_pd HAS_SOPCINFO 1 GENERATION_ID 1619288157 ; --            ; em_project_final_pd ; --         ;
+; SLD_INFO                            ; QSYS_NAME em_project_final_pd HAS_SOPCINFO 1 GENERATION_ID 1619301216 ; --            ; em_project_final_pd ; --         ;
 ; SOPCINFO_FILE                       ; em_project_final_pd/synthesis/../../em_project_final_pd.sopcinfo      ; --            ; --                  ; --         ;
 ; SYNTHESIS_ONLY_QIP                  ; On                                                                    ; --            ; --                  ; --         ;
 +-------------------------------------+-----------------------------------------------------------------------+---------------+---------------------+------------+
@@ -102,11 +102,11 @@ https://fpgasoftware.intel.com/eula.
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name          ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Synthesis ; 00:01:40     ; 1.0                     ; 4956 MB             ; 00:02:09                           ;
-; Fitter               ; 00:05:03     ; 1.1                     ; 6634 MB             ; 00:08:08                           ;
-; Assembler            ; 00:00:16     ; 1.0                     ; 4873 MB             ; 00:00:16                           ;
-; Timing Analyzer      ; 00:00:35     ; 1.4                     ; 5343 MB             ; 00:00:42                           ;
-; Total                ; 00:07:34     ; --                      ; --                  ; 00:11:15                           ;
+; Analysis & Synthesis ; 00:01:38     ; 1.0                     ; 5018 MB             ; 00:02:04                           ;
+; Fitter               ; 00:04:45     ; 1.1                     ; 6660 MB             ; 00:08:21                           ;
+; Assembler            ; 00:00:18     ; 1.0                     ; 4885 MB             ; 00:00:19                           ;
+; Timing Analyzer      ; 00:00:40     ; 1.4                     ; 5386 MB             ; 00:00:51                           ;
+; Total                ; 00:07:21     ; --                      ; --                  ; 00:11:35                           ;
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 

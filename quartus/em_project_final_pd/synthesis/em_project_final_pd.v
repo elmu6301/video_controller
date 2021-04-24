@@ -5,10 +5,20 @@
 `timescale 1 ps / 1 ps
 module em_project_final_pd (
 		input  wire        clk_clk,                          //                       clk.clk
+		output wire        fifo_0_out_valid,                 //                fifo_0_out.valid
+		output wire [31:0] fifo_0_out_data,                  //                          .data
+		output wire [7:0]  fifo_0_out_channel,               //                          .channel
+		output wire [7:0]  fifo_0_out_error,                 //                          .error
+		output wire        fifo_0_out_startofpacket,         //                          .startofpacket
+		output wire        fifo_0_out_endofpacket,           //                          .endofpacket
+		output wire        fifo_0_out_empty,                 //                          .empty
+		input  wire        fifo_0_out_ready,                 //                          .ready
 		output wire [9:0]  pio_0_external_connection_export, // pio_0_external_connection.export
-		output wire        pll_0_locked_export,              //              pll_0_locked.export
-		output wire        pll_0_outclk_clk,                 //              pll_0_outclk.clk
-		output wire        pll_0_outclk_shift_clk,           //        pll_0_outclk_shift.clk
+		output wire        pll_rfr_locked_export,            //            pll_rfr_locked.export
+		output wire        pll_rfr_outclk_clk,               //            pll_rfr_outclk.clk
+		output wire        pll_sdram_locked_export,          //          pll_sdram_locked.export
+		output wire        pll_sdram_outclk_clk,             //          pll_sdram_outclk.clk
+		output wire        pll_sdram_outclk_ps_clk,          //       pll_sdram_outclk_ps.clk
 		input  wire        reset_reset_n,                    //                     reset.reset_n
 		output wire [12:0] sdram_controller_0_wire_addr,     //   sdram_controller_0_wire.addr
 		output wire [1:0]  sdram_controller_0_wire_ba,       //                          .ba
@@ -21,9 +31,10 @@ module em_project_final_pd (
 		output wire        sdram_controller_0_wire_we_n      //                          .we_n
 	);
 
-	wire         pll_0_outclk1_clk;                                              // pll_0:outclk_1 -> [master_0:clk_clk, mm_interconnect_0:pll_0_outclk1_clk, pio_0:clk, rst_controller:clk, rst_controller_002:clk, sdram_controller_0:clk]
-	wire  [63:0] pll_0_reconfig_from_pll_reconfig_from_pll;                      // pll_0:reconfig_from_pll -> pll_reconfig_0:reconfig_from_pll
-	wire  [63:0] pll_reconfig_0_reconfig_to_pll_reconfig_to_pll;                 // pll_reconfig_0:reconfig_to_pll -> pll_0:reconfig_to_pll
+	wire         pll_rfr_outclk0_clk;                                            // pll_rfr:outclk_0 -> [fifo_0:rdclock, rst_controller_002:clk]
+	wire         pll_sdram_outclk1_clk;                                          // pll_sdram:outclk_1 -> [dma_0:clk, fifo_0:wrclock, master_0:clk_clk, mm_interconnect_0:pll_sdram_outclk1_clk, mm_interconnect_1:pll_sdram_outclk1_clk, pio_0:clk, rst_controller:clk, rst_controller_001:clk, rst_controller_004:clk, sdram_controller_0:clk]
+	wire  [63:0] pll_sdram_reconfig_from_pll_reconfig_from_pll;                  // pll_sdram:reconfig_from_pll -> pll_reconfig_0:reconfig_from_pll
+	wire  [63:0] pll_reconfig_0_reconfig_to_pll_reconfig_to_pll;                 // pll_reconfig_0:reconfig_to_pll -> pll_sdram:reconfig_to_pll
 	wire  [31:0] master_0_master_readdata;                                       // mm_interconnect_0:master_0_master_readdata -> master_0:master_readdata
 	wire         master_0_master_waitrequest;                                    // mm_interconnect_0:master_0_master_waitrequest -> master_0:master_waitrequest
 	wire  [31:0] master_0_master_address;                                        // master_0:master_address -> mm_interconnect_0:master_0_master_address
@@ -32,6 +43,18 @@ module em_project_final_pd (
 	wire         master_0_master_readdatavalid;                                  // mm_interconnect_0:master_0_master_readdatavalid -> master_0:master_readdatavalid
 	wire         master_0_master_write;                                          // master_0:master_write -> mm_interconnect_0:master_0_master_write
 	wire  [31:0] master_0_master_writedata;                                      // master_0:master_writedata -> mm_interconnect_0:master_0_master_writedata
+	wire         dma_0_read_master_chipselect;                                   // dma_0:read_chipselect -> mm_interconnect_0:dma_0_read_master_chipselect
+	wire  [31:0] dma_0_read_master_readdata;                                     // mm_interconnect_0:dma_0_read_master_readdata -> dma_0:read_readdata
+	wire         dma_0_read_master_waitrequest;                                  // mm_interconnect_0:dma_0_read_master_waitrequest -> dma_0:read_waitrequest
+	wire  [25:0] dma_0_read_master_address;                                      // dma_0:read_address -> mm_interconnect_0:dma_0_read_master_address
+	wire         dma_0_read_master_read;                                         // dma_0:read_read_n -> mm_interconnect_0:dma_0_read_master_read
+	wire         dma_0_read_master_readdatavalid;                                // mm_interconnect_0:dma_0_read_master_readdatavalid -> dma_0:read_readdatavalid
+	wire   [7:0] dma_0_read_master_burstcount;                                   // dma_0:read_burstcount -> mm_interconnect_0:dma_0_read_master_burstcount
+	wire         mm_interconnect_0_dma_0_control_port_slave_chipselect;          // mm_interconnect_0:dma_0_control_port_slave_chipselect -> dma_0:dma_ctl_chipselect
+	wire  [30:0] mm_interconnect_0_dma_0_control_port_slave_readdata;            // dma_0:dma_ctl_readdata -> mm_interconnect_0:dma_0_control_port_slave_readdata
+	wire   [2:0] mm_interconnect_0_dma_0_control_port_slave_address;             // mm_interconnect_0:dma_0_control_port_slave_address -> dma_0:dma_ctl_address
+	wire         mm_interconnect_0_dma_0_control_port_slave_write;               // mm_interconnect_0:dma_0_control_port_slave_write -> dma_0:dma_ctl_write_n
+	wire  [30:0] mm_interconnect_0_dma_0_control_port_slave_writedata;           // mm_interconnect_0:dma_0_control_port_slave_writedata -> dma_0:dma_ctl_writedata
 	wire  [31:0] mm_interconnect_0_pll_reconfig_0_mgmt_avalon_slave_readdata;    // pll_reconfig_0:mgmt_readdata -> mm_interconnect_0:pll_reconfig_0_mgmt_avalon_slave_readdata
 	wire         mm_interconnect_0_pll_reconfig_0_mgmt_avalon_slave_waitrequest; // pll_reconfig_0:mgmt_waitrequest -> mm_interconnect_0:pll_reconfig_0_mgmt_avalon_slave_waitrequest
 	wire   [5:0] mm_interconnect_0_pll_reconfig_0_mgmt_avalon_slave_address;     // mm_interconnect_0:pll_reconfig_0_mgmt_avalon_slave_address -> pll_reconfig_0:mgmt_address
@@ -52,17 +75,80 @@ module em_project_final_pd (
 	wire         mm_interconnect_0_sdram_controller_0_s1_readdatavalid;          // sdram_controller_0:za_valid -> mm_interconnect_0:sdram_controller_0_s1_readdatavalid
 	wire         mm_interconnect_0_sdram_controller_0_s1_write;                  // mm_interconnect_0:sdram_controller_0_s1_write -> sdram_controller_0:az_wr_n
 	wire  [15:0] mm_interconnect_0_sdram_controller_0_s1_writedata;              // mm_interconnect_0:sdram_controller_0_s1_writedata -> sdram_controller_0:az_data
-	wire         rst_controller_reset_out_reset;                                 // rst_controller:reset_out -> [mm_interconnect_0:master_0_clk_reset_reset_bridge_in_reset_reset, mm_interconnect_0:pio_0_reset_reset_bridge_in_reset_reset, pio_0:reset_n]
-	wire         rst_controller_001_reset_out_reset;                             // rst_controller_001:reset_out -> [mm_interconnect_0:pll_reconfig_0_mgmt_reset_reset_bridge_in_reset_reset, pll_reconfig_0:mgmt_reset]
-	wire         rst_controller_002_reset_out_reset;                             // rst_controller_002:reset_out -> [mm_interconnect_0:sdram_controller_0_reset_reset_bridge_in_reset_reset, sdram_controller_0:reset_n]
-	wire         master_0_master_reset_reset;                                    // master_0:master_reset_reset -> rst_controller_002:reset_in1
+	wire         dma_0_write_master_chipselect;                                  // dma_0:write_chipselect -> mm_interconnect_1:dma_0_write_master_chipselect
+	wire         dma_0_write_master_waitrequest;                                 // mm_interconnect_1:dma_0_write_master_waitrequest -> dma_0:write_waitrequest
+	wire  [30:0] dma_0_write_master_address;                                     // dma_0:write_address -> mm_interconnect_1:dma_0_write_master_address
+	wire   [3:0] dma_0_write_master_byteenable;                                  // dma_0:write_byteenable -> mm_interconnect_1:dma_0_write_master_byteenable
+	wire         dma_0_write_master_write;                                       // dma_0:write_write_n -> mm_interconnect_1:dma_0_write_master_write
+	wire  [31:0] dma_0_write_master_writedata;                                   // dma_0:write_writedata -> mm_interconnect_1:dma_0_write_master_writedata
+	wire   [7:0] dma_0_write_master_burstcount;                                  // dma_0:write_burstcount -> mm_interconnect_1:dma_0_write_master_burstcount
+	wire         mm_interconnect_1_fifo_0_in_waitrequest;                        // fifo_0:avalonmm_write_slave_waitrequest -> mm_interconnect_1:fifo_0_in_waitrequest
+	wire   [0:0] mm_interconnect_1_fifo_0_in_address;                            // mm_interconnect_1:fifo_0_in_address -> fifo_0:avalonmm_write_slave_address
+	wire         mm_interconnect_1_fifo_0_in_write;                              // mm_interconnect_1:fifo_0_in_write -> fifo_0:avalonmm_write_slave_write
+	wire  [31:0] mm_interconnect_1_fifo_0_in_writedata;                          // mm_interconnect_1:fifo_0_in_writedata -> fifo_0:avalonmm_write_slave_writedata
+	wire         rst_controller_reset_out_reset;                                 // rst_controller:reset_out -> [dma_0:system_reset_n, mm_interconnect_0:dma_0_reset_reset_bridge_in_reset_reset, mm_interconnect_1:dma_0_reset_reset_bridge_in_reset_reset]
+	wire         master_0_master_reset_reset;                                    // master_0:master_reset_reset -> [rst_controller:reset_in0, rst_controller_004:reset_in1]
+	wire         rst_controller_001_reset_out_reset;                             // rst_controller_001:reset_out -> [fifo_0:wrreset_n, mm_interconnect_0:master_0_clk_reset_reset_bridge_in_reset_reset, mm_interconnect_0:pio_0_reset_reset_bridge_in_reset_reset, mm_interconnect_1:fifo_0_reset_in_reset_bridge_in_reset_reset, pio_0:reset_n]
+	wire         rst_controller_002_reset_out_reset;                             // rst_controller_002:reset_out -> fifo_0:rdreset_n
+	wire         rst_controller_003_reset_out_reset;                             // rst_controller_003:reset_out -> [mm_interconnect_0:pll_reconfig_0_mgmt_reset_reset_bridge_in_reset_reset, pll_reconfig_0:mgmt_reset]
+	wire         rst_controller_004_reset_out_reset;                             // rst_controller_004:reset_out -> [mm_interconnect_0:sdram_controller_0_reset_reset_bridge_in_reset_reset, sdram_controller_0:reset_n]
+
+	em_project_final_pd_dma_0 dma_0 (
+		.clk                (pll_sdram_outclk1_clk),                                 //                clk.clk
+		.system_reset_n     (~rst_controller_reset_out_reset),                       //              reset.reset_n
+		.dma_ctl_address    (mm_interconnect_0_dma_0_control_port_slave_address),    // control_port_slave.address
+		.dma_ctl_chipselect (mm_interconnect_0_dma_0_control_port_slave_chipselect), //                   .chipselect
+		.dma_ctl_readdata   (mm_interconnect_0_dma_0_control_port_slave_readdata),   //                   .readdata
+		.dma_ctl_write_n    (~mm_interconnect_0_dma_0_control_port_slave_write),     //                   .write_n
+		.dma_ctl_writedata  (mm_interconnect_0_dma_0_control_port_slave_writedata),  //                   .writedata
+		.dma_ctl_irq        (),                                                      //                irq.irq
+		.read_address       (dma_0_read_master_address),                             //        read_master.address
+		.read_chipselect    (dma_0_read_master_chipselect),                          //                   .chipselect
+		.read_read_n        (dma_0_read_master_read),                                //                   .read_n
+		.read_readdata      (dma_0_read_master_readdata),                            //                   .readdata
+		.read_readdatavalid (dma_0_read_master_readdatavalid),                       //                   .readdatavalid
+		.read_waitrequest   (dma_0_read_master_waitrequest),                         //                   .waitrequest
+		.read_burstcount    (dma_0_read_master_burstcount),                          //                   .burstcount
+		.write_address      (dma_0_write_master_address),                            //       write_master.address
+		.write_chipselect   (dma_0_write_master_chipselect),                         //                   .chipselect
+		.write_waitrequest  (dma_0_write_master_waitrequest),                        //                   .waitrequest
+		.write_write_n      (dma_0_write_master_write),                              //                   .write_n
+		.write_writedata    (dma_0_write_master_writedata),                          //                   .writedata
+		.write_byteenable   (dma_0_write_master_byteenable),                         //                   .byteenable
+		.write_burstcount   (dma_0_write_master_burstcount)                          //                   .burstcount
+	);
+
+	em_project_final_pd_fifo_0 fifo_0 (
+		.wrclock                          (pll_sdram_outclk1_clk),                   //    clk_in.clk
+		.wrreset_n                        (~rst_controller_001_reset_out_reset),     //  reset_in.reset_n
+		.rdclock                          (pll_rfr_outclk0_clk),                     //   clk_out.clk
+		.rdreset_n                        (~rst_controller_002_reset_out_reset),     // reset_out.reset_n
+		.avalonmm_write_slave_writedata   (mm_interconnect_1_fifo_0_in_writedata),   //        in.writedata
+		.avalonmm_write_slave_write       (mm_interconnect_1_fifo_0_in_write),       //          .write
+		.avalonmm_write_slave_address     (mm_interconnect_1_fifo_0_in_address),     //          .address
+		.avalonmm_write_slave_waitrequest (mm_interconnect_1_fifo_0_in_waitrequest), //          .waitrequest
+		.avalonst_source_valid            (fifo_0_out_valid),                        //       out.valid
+		.avalonst_source_data             (fifo_0_out_data),                         //          .data
+		.avalonst_source_channel          (fifo_0_out_channel),                      //          .channel
+		.avalonst_source_error            (fifo_0_out_error),                        //          .error
+		.avalonst_source_startofpacket    (fifo_0_out_startofpacket),                //          .startofpacket
+		.avalonst_source_endofpacket      (fifo_0_out_endofpacket),                  //          .endofpacket
+		.avalonst_source_empty            (fifo_0_out_empty),                        //          .empty
+		.avalonst_source_ready            (fifo_0_out_ready),                        //          .ready
+		.wrclk_control_slave_address      (),                                        //    in_csr.address
+		.wrclk_control_slave_read         (),                                        //          .read
+		.wrclk_control_slave_writedata    (),                                        //          .writedata
+		.wrclk_control_slave_write        (),                                        //          .write
+		.wrclk_control_slave_readdata     (),                                        //          .readdata
+		.wrclk_control_slave_irq          ()                                         //    in_irq.irq
+	);
 
 	em_project_final_pd_master_0 #(
 		.USE_PLI     (0),
 		.PLI_PORT    (50000),
 		.FIFO_DEPTHS (2)
 	) master_0 (
-		.clk_clk              (pll_0_outclk1_clk),             //          clk.clk
+		.clk_clk              (pll_sdram_outclk1_clk),         //          clk.clk
 		.clk_reset_reset      (~reset_reset_n),                //    clk_reset.reset
 		.master_address       (master_0_master_address),       //       master.address
 		.master_readdata      (master_0_master_readdata),      //             .readdata
@@ -76,25 +162,14 @@ module em_project_final_pd (
 	);
 
 	em_project_final_pd_pio_0 pio_0 (
-		.clk        (pll_0_outclk1_clk),                     //                 clk.clk
-		.reset_n    (~rst_controller_reset_out_reset),       //               reset.reset_n
+		.clk        (pll_sdram_outclk1_clk),                 //                 clk.clk
+		.reset_n    (~rst_controller_001_reset_out_reset),   //               reset.reset_n
 		.address    (mm_interconnect_0_pio_0_s1_address),    //                  s1.address
 		.write_n    (~mm_interconnect_0_pio_0_s1_write),     //                    .write_n
 		.writedata  (mm_interconnect_0_pio_0_s1_writedata),  //                    .writedata
 		.chipselect (mm_interconnect_0_pio_0_s1_chipselect), //                    .chipselect
 		.readdata   (mm_interconnect_0_pio_0_s1_readdata),   //                    .readdata
 		.out_port   (pio_0_external_connection_export)       // external_connection.export
-	);
-
-	em_project_final_pd_pll_0 pll_0 (
-		.refclk            (clk_clk),                                        //            refclk.clk
-		.rst               (~reset_reset_n),                                 //             reset.reset
-		.outclk_0          (pll_0_outclk_shift_clk),                         //           outclk0.clk
-		.outclk_1          (pll_0_outclk1_clk),                              //           outclk1.clk
-		.outclk_2          (pll_0_outclk_clk),                               //           outclk2.clk
-		.locked            (pll_0_locked_export),                            //            locked.export
-		.reconfig_to_pll   (pll_reconfig_0_reconfig_to_pll_reconfig_to_pll), //   reconfig_to_pll.reconfig_to_pll
-		.reconfig_from_pll (pll_0_reconfig_from_pll_reconfig_from_pll)       // reconfig_from_pll.reconfig_from_pll
 	);
 
 	altera_pll_reconfig_top #(
@@ -109,7 +184,7 @@ module em_project_final_pd (
 		.WAIT_FOR_LOCK       (1)
 	) pll_reconfig_0 (
 		.mgmt_clk          (clk_clk),                                                        //          mgmt_clk.clk
-		.mgmt_reset        (rst_controller_001_reset_out_reset),                             //        mgmt_reset.reset
+		.mgmt_reset        (rst_controller_003_reset_out_reset),                             //        mgmt_reset.reset
 		.mgmt_waitrequest  (mm_interconnect_0_pll_reconfig_0_mgmt_avalon_slave_waitrequest), // mgmt_avalon_slave.waitrequest
 		.mgmt_read         (mm_interconnect_0_pll_reconfig_0_mgmt_avalon_slave_read),        //                  .read
 		.mgmt_write        (mm_interconnect_0_pll_reconfig_0_mgmt_avalon_slave_write),       //                  .write
@@ -117,13 +192,32 @@ module em_project_final_pd (
 		.mgmt_address      (mm_interconnect_0_pll_reconfig_0_mgmt_avalon_slave_address),     //                  .address
 		.mgmt_writedata    (mm_interconnect_0_pll_reconfig_0_mgmt_avalon_slave_writedata),   //                  .writedata
 		.reconfig_to_pll   (pll_reconfig_0_reconfig_to_pll_reconfig_to_pll),                 //   reconfig_to_pll.reconfig_to_pll
-		.reconfig_from_pll (pll_0_reconfig_from_pll_reconfig_from_pll),                      // reconfig_from_pll.reconfig_from_pll
+		.reconfig_from_pll (pll_sdram_reconfig_from_pll_reconfig_from_pll),                  // reconfig_from_pll.reconfig_from_pll
 		.mgmt_byteenable   (4'b0000)                                                         //       (terminated)
 	);
 
+	em_project_final_pd_pll_rfr pll_rfr (
+		.refclk   (clk_clk),               //  refclk.clk
+		.rst      (~reset_reset_n),        //   reset.reset
+		.outclk_0 (pll_rfr_outclk0_clk),   // outclk0.clk
+		.outclk_1 (pll_rfr_outclk_clk),    // outclk1.clk
+		.locked   (pll_rfr_locked_export)  //  locked.export
+	);
+
+	em_project_final_pd_pll_sdram pll_sdram (
+		.refclk            (clk_clk),                                        //            refclk.clk
+		.rst               (~reset_reset_n),                                 //             reset.reset
+		.outclk_0          (pll_sdram_outclk_ps_clk),                        //           outclk0.clk
+		.outclk_1          (pll_sdram_outclk1_clk),                          //           outclk1.clk
+		.outclk_2          (pll_sdram_outclk_clk),                           //           outclk2.clk
+		.locked            (pll_sdram_locked_export),                        //            locked.export
+		.reconfig_to_pll   (pll_reconfig_0_reconfig_to_pll_reconfig_to_pll), //   reconfig_to_pll.reconfig_to_pll
+		.reconfig_from_pll (pll_sdram_reconfig_from_pll_reconfig_from_pll)   // reconfig_from_pll.reconfig_from_pll
+	);
+
 	em_project_final_pd_sdram_controller_0 sdram_controller_0 (
-		.clk            (pll_0_outclk1_clk),                                     //   clk.clk
-		.reset_n        (~rst_controller_002_reset_out_reset),                   // reset.reset_n
+		.clk            (pll_sdram_outclk1_clk),                                 //   clk.clk
+		.reset_n        (~rst_controller_004_reset_out_reset),                   // reset.reset_n
 		.az_addr        (mm_interconnect_0_sdram_controller_0_s1_address),       //    s1.address
 		.az_be_n        (~mm_interconnect_0_sdram_controller_0_s1_byteenable),   //      .byteenable_n
 		.az_cs          (mm_interconnect_0_sdram_controller_0_s1_chipselect),    //      .chipselect
@@ -146,11 +240,19 @@ module em_project_final_pd (
 
 	em_project_final_pd_mm_interconnect_0 mm_interconnect_0 (
 		.clk_0_clk_clk                                         (clk_clk),                                                        //                                       clk_0_clk.clk
-		.pll_0_outclk1_clk                                     (pll_0_outclk1_clk),                                              //                                   pll_0_outclk1.clk
-		.master_0_clk_reset_reset_bridge_in_reset_reset        (rst_controller_reset_out_reset),                                 //        master_0_clk_reset_reset_bridge_in_reset.reset
-		.pio_0_reset_reset_bridge_in_reset_reset               (rst_controller_reset_out_reset),                                 //               pio_0_reset_reset_bridge_in_reset.reset
-		.pll_reconfig_0_mgmt_reset_reset_bridge_in_reset_reset (rst_controller_001_reset_out_reset),                             // pll_reconfig_0_mgmt_reset_reset_bridge_in_reset.reset
-		.sdram_controller_0_reset_reset_bridge_in_reset_reset  (rst_controller_002_reset_out_reset),                             //  sdram_controller_0_reset_reset_bridge_in_reset.reset
+		.pll_sdram_outclk1_clk                                 (pll_sdram_outclk1_clk),                                          //                               pll_sdram_outclk1.clk
+		.dma_0_reset_reset_bridge_in_reset_reset               (rst_controller_reset_out_reset),                                 //               dma_0_reset_reset_bridge_in_reset.reset
+		.master_0_clk_reset_reset_bridge_in_reset_reset        (rst_controller_001_reset_out_reset),                             //        master_0_clk_reset_reset_bridge_in_reset.reset
+		.pio_0_reset_reset_bridge_in_reset_reset               (rst_controller_001_reset_out_reset),                             //               pio_0_reset_reset_bridge_in_reset.reset
+		.pll_reconfig_0_mgmt_reset_reset_bridge_in_reset_reset (rst_controller_003_reset_out_reset),                             // pll_reconfig_0_mgmt_reset_reset_bridge_in_reset.reset
+		.sdram_controller_0_reset_reset_bridge_in_reset_reset  (rst_controller_004_reset_out_reset),                             //  sdram_controller_0_reset_reset_bridge_in_reset.reset
+		.dma_0_read_master_address                             (dma_0_read_master_address),                                      //                               dma_0_read_master.address
+		.dma_0_read_master_waitrequest                         (dma_0_read_master_waitrequest),                                  //                                                .waitrequest
+		.dma_0_read_master_burstcount                          (dma_0_read_master_burstcount),                                   //                                                .burstcount
+		.dma_0_read_master_chipselect                          (dma_0_read_master_chipselect),                                   //                                                .chipselect
+		.dma_0_read_master_read                                (~dma_0_read_master_read),                                        //                                                .read
+		.dma_0_read_master_readdata                            (dma_0_read_master_readdata),                                     //                                                .readdata
+		.dma_0_read_master_readdatavalid                       (dma_0_read_master_readdatavalid),                                //                                                .readdatavalid
 		.master_0_master_address                               (master_0_master_address),                                        //                                 master_0_master.address
 		.master_0_master_waitrequest                           (master_0_master_waitrequest),                                    //                                                .waitrequest
 		.master_0_master_byteenable                            (master_0_master_byteenable),                                     //                                                .byteenable
@@ -159,6 +261,11 @@ module em_project_final_pd (
 		.master_0_master_readdatavalid                         (master_0_master_readdatavalid),                                  //                                                .readdatavalid
 		.master_0_master_write                                 (master_0_master_write),                                          //                                                .write
 		.master_0_master_writedata                             (master_0_master_writedata),                                      //                                                .writedata
+		.dma_0_control_port_slave_address                      (mm_interconnect_0_dma_0_control_port_slave_address),             //                        dma_0_control_port_slave.address
+		.dma_0_control_port_slave_write                        (mm_interconnect_0_dma_0_control_port_slave_write),               //                                                .write
+		.dma_0_control_port_slave_readdata                     (mm_interconnect_0_dma_0_control_port_slave_readdata),            //                                                .readdata
+		.dma_0_control_port_slave_writedata                    (mm_interconnect_0_dma_0_control_port_slave_writedata),           //                                                .writedata
+		.dma_0_control_port_slave_chipselect                   (mm_interconnect_0_dma_0_control_port_slave_chipselect),          //                                                .chipselect
 		.pio_0_s1_address                                      (mm_interconnect_0_pio_0_s1_address),                             //                                        pio_0_s1.address
 		.pio_0_s1_write                                        (mm_interconnect_0_pio_0_s1_write),                               //                                                .write
 		.pio_0_s1_readdata                                     (mm_interconnect_0_pio_0_s1_readdata),                            //                                                .readdata
@@ -179,6 +286,23 @@ module em_project_final_pd (
 		.sdram_controller_0_s1_readdatavalid                   (mm_interconnect_0_sdram_controller_0_s1_readdatavalid),          //                                                .readdatavalid
 		.sdram_controller_0_s1_waitrequest                     (mm_interconnect_0_sdram_controller_0_s1_waitrequest),            //                                                .waitrequest
 		.sdram_controller_0_s1_chipselect                      (mm_interconnect_0_sdram_controller_0_s1_chipselect)              //                                                .chipselect
+	);
+
+	em_project_final_pd_mm_interconnect_1 mm_interconnect_1 (
+		.pll_sdram_outclk1_clk                       (pll_sdram_outclk1_clk),                   //                     pll_sdram_outclk1.clk
+		.dma_0_reset_reset_bridge_in_reset_reset     (rst_controller_reset_out_reset),          //     dma_0_reset_reset_bridge_in_reset.reset
+		.fifo_0_reset_in_reset_bridge_in_reset_reset (rst_controller_001_reset_out_reset),      // fifo_0_reset_in_reset_bridge_in_reset.reset
+		.dma_0_write_master_address                  (dma_0_write_master_address),              //                    dma_0_write_master.address
+		.dma_0_write_master_waitrequest              (dma_0_write_master_waitrequest),          //                                      .waitrequest
+		.dma_0_write_master_burstcount               (dma_0_write_master_burstcount),           //                                      .burstcount
+		.dma_0_write_master_byteenable               (dma_0_write_master_byteenable),           //                                      .byteenable
+		.dma_0_write_master_chipselect               (dma_0_write_master_chipselect),           //                                      .chipselect
+		.dma_0_write_master_write                    (~dma_0_write_master_write),               //                                      .write
+		.dma_0_write_master_writedata                (dma_0_write_master_writedata),            //                                      .writedata
+		.fifo_0_in_address                           (mm_interconnect_1_fifo_0_in_address),     //                             fifo_0_in.address
+		.fifo_0_in_write                             (mm_interconnect_1_fifo_0_in_write),       //                                      .write
+		.fifo_0_in_writedata                         (mm_interconnect_1_fifo_0_in_writedata),   //                                      .writedata
+		.fifo_0_in_waitrequest                       (mm_interconnect_1_fifo_0_in_waitrequest)  //                                      .waitrequest
 	);
 
 	altera_reset_controller #(
@@ -207,8 +331,8 @@ module em_project_final_pd (
 		.USE_RESET_REQUEST_IN15    (0),
 		.ADAPT_RESET_REQUEST       (0)
 	) rst_controller (
-		.reset_in0      (~reset_reset_n),                 // reset_in0.reset
-		.clk            (pll_0_outclk1_clk),              //       clk.clk
+		.reset_in0      (master_0_master_reset_reset),    // reset_in0.reset
+		.clk            (pll_sdram_outclk1_clk),          //       clk.clk
 		.reset_out      (rst_controller_reset_out_reset), // reset_out.reset
 		.reset_req      (),                               // (terminated)
 		.reset_req_in0  (1'b0),                           // (terminated)
@@ -271,8 +395,134 @@ module em_project_final_pd (
 		.ADAPT_RESET_REQUEST       (0)
 	) rst_controller_001 (
 		.reset_in0      (~reset_reset_n),                     // reset_in0.reset
-		.clk            (clk_clk),                            //       clk.clk
+		.clk            (pll_sdram_outclk1_clk),              //       clk.clk
 		.reset_out      (rst_controller_001_reset_out_reset), // reset_out.reset
+		.reset_req      (),                                   // (terminated)
+		.reset_req_in0  (1'b0),                               // (terminated)
+		.reset_in1      (1'b0),                               // (terminated)
+		.reset_req_in1  (1'b0),                               // (terminated)
+		.reset_in2      (1'b0),                               // (terminated)
+		.reset_req_in2  (1'b0),                               // (terminated)
+		.reset_in3      (1'b0),                               // (terminated)
+		.reset_req_in3  (1'b0),                               // (terminated)
+		.reset_in4      (1'b0),                               // (terminated)
+		.reset_req_in4  (1'b0),                               // (terminated)
+		.reset_in5      (1'b0),                               // (terminated)
+		.reset_req_in5  (1'b0),                               // (terminated)
+		.reset_in6      (1'b0),                               // (terminated)
+		.reset_req_in6  (1'b0),                               // (terminated)
+		.reset_in7      (1'b0),                               // (terminated)
+		.reset_req_in7  (1'b0),                               // (terminated)
+		.reset_in8      (1'b0),                               // (terminated)
+		.reset_req_in8  (1'b0),                               // (terminated)
+		.reset_in9      (1'b0),                               // (terminated)
+		.reset_req_in9  (1'b0),                               // (terminated)
+		.reset_in10     (1'b0),                               // (terminated)
+		.reset_req_in10 (1'b0),                               // (terminated)
+		.reset_in11     (1'b0),                               // (terminated)
+		.reset_req_in11 (1'b0),                               // (terminated)
+		.reset_in12     (1'b0),                               // (terminated)
+		.reset_req_in12 (1'b0),                               // (terminated)
+		.reset_in13     (1'b0),                               // (terminated)
+		.reset_req_in13 (1'b0),                               // (terminated)
+		.reset_in14     (1'b0),                               // (terminated)
+		.reset_req_in14 (1'b0),                               // (terminated)
+		.reset_in15     (1'b0),                               // (terminated)
+		.reset_req_in15 (1'b0)                                // (terminated)
+	);
+
+	altera_reset_controller #(
+		.NUM_RESET_INPUTS          (1),
+		.OUTPUT_RESET_SYNC_EDGES   ("deassert"),
+		.SYNC_DEPTH                (2),
+		.RESET_REQUEST_PRESENT     (0),
+		.RESET_REQ_WAIT_TIME       (1),
+		.MIN_RST_ASSERTION_TIME    (3),
+		.RESET_REQ_EARLY_DSRT_TIME (1),
+		.USE_RESET_REQUEST_IN0     (0),
+		.USE_RESET_REQUEST_IN1     (0),
+		.USE_RESET_REQUEST_IN2     (0),
+		.USE_RESET_REQUEST_IN3     (0),
+		.USE_RESET_REQUEST_IN4     (0),
+		.USE_RESET_REQUEST_IN5     (0),
+		.USE_RESET_REQUEST_IN6     (0),
+		.USE_RESET_REQUEST_IN7     (0),
+		.USE_RESET_REQUEST_IN8     (0),
+		.USE_RESET_REQUEST_IN9     (0),
+		.USE_RESET_REQUEST_IN10    (0),
+		.USE_RESET_REQUEST_IN11    (0),
+		.USE_RESET_REQUEST_IN12    (0),
+		.USE_RESET_REQUEST_IN13    (0),
+		.USE_RESET_REQUEST_IN14    (0),
+		.USE_RESET_REQUEST_IN15    (0),
+		.ADAPT_RESET_REQUEST       (0)
+	) rst_controller_002 (
+		.reset_in0      (~reset_reset_n),                     // reset_in0.reset
+		.clk            (pll_rfr_outclk0_clk),                //       clk.clk
+		.reset_out      (rst_controller_002_reset_out_reset), // reset_out.reset
+		.reset_req      (),                                   // (terminated)
+		.reset_req_in0  (1'b0),                               // (terminated)
+		.reset_in1      (1'b0),                               // (terminated)
+		.reset_req_in1  (1'b0),                               // (terminated)
+		.reset_in2      (1'b0),                               // (terminated)
+		.reset_req_in2  (1'b0),                               // (terminated)
+		.reset_in3      (1'b0),                               // (terminated)
+		.reset_req_in3  (1'b0),                               // (terminated)
+		.reset_in4      (1'b0),                               // (terminated)
+		.reset_req_in4  (1'b0),                               // (terminated)
+		.reset_in5      (1'b0),                               // (terminated)
+		.reset_req_in5  (1'b0),                               // (terminated)
+		.reset_in6      (1'b0),                               // (terminated)
+		.reset_req_in6  (1'b0),                               // (terminated)
+		.reset_in7      (1'b0),                               // (terminated)
+		.reset_req_in7  (1'b0),                               // (terminated)
+		.reset_in8      (1'b0),                               // (terminated)
+		.reset_req_in8  (1'b0),                               // (terminated)
+		.reset_in9      (1'b0),                               // (terminated)
+		.reset_req_in9  (1'b0),                               // (terminated)
+		.reset_in10     (1'b0),                               // (terminated)
+		.reset_req_in10 (1'b0),                               // (terminated)
+		.reset_in11     (1'b0),                               // (terminated)
+		.reset_req_in11 (1'b0),                               // (terminated)
+		.reset_in12     (1'b0),                               // (terminated)
+		.reset_req_in12 (1'b0),                               // (terminated)
+		.reset_in13     (1'b0),                               // (terminated)
+		.reset_req_in13 (1'b0),                               // (terminated)
+		.reset_in14     (1'b0),                               // (terminated)
+		.reset_req_in14 (1'b0),                               // (terminated)
+		.reset_in15     (1'b0),                               // (terminated)
+		.reset_req_in15 (1'b0)                                // (terminated)
+	);
+
+	altera_reset_controller #(
+		.NUM_RESET_INPUTS          (1),
+		.OUTPUT_RESET_SYNC_EDGES   ("deassert"),
+		.SYNC_DEPTH                (2),
+		.RESET_REQUEST_PRESENT     (0),
+		.RESET_REQ_WAIT_TIME       (1),
+		.MIN_RST_ASSERTION_TIME    (3),
+		.RESET_REQ_EARLY_DSRT_TIME (1),
+		.USE_RESET_REQUEST_IN0     (0),
+		.USE_RESET_REQUEST_IN1     (0),
+		.USE_RESET_REQUEST_IN2     (0),
+		.USE_RESET_REQUEST_IN3     (0),
+		.USE_RESET_REQUEST_IN4     (0),
+		.USE_RESET_REQUEST_IN5     (0),
+		.USE_RESET_REQUEST_IN6     (0),
+		.USE_RESET_REQUEST_IN7     (0),
+		.USE_RESET_REQUEST_IN8     (0),
+		.USE_RESET_REQUEST_IN9     (0),
+		.USE_RESET_REQUEST_IN10    (0),
+		.USE_RESET_REQUEST_IN11    (0),
+		.USE_RESET_REQUEST_IN12    (0),
+		.USE_RESET_REQUEST_IN13    (0),
+		.USE_RESET_REQUEST_IN14    (0),
+		.USE_RESET_REQUEST_IN15    (0),
+		.ADAPT_RESET_REQUEST       (0)
+	) rst_controller_003 (
+		.reset_in0      (~reset_reset_n),                     // reset_in0.reset
+		.clk            (clk_clk),                            //       clk.clk
+		.reset_out      (rst_controller_003_reset_out_reset), // reset_out.reset
 		.reset_req      (),                                   // (terminated)
 		.reset_req_in0  (1'b0),                               // (terminated)
 		.reset_in1      (1'b0),                               // (terminated)
@@ -332,11 +582,11 @@ module em_project_final_pd (
 		.USE_RESET_REQUEST_IN14    (0),
 		.USE_RESET_REQUEST_IN15    (0),
 		.ADAPT_RESET_REQUEST       (0)
-	) rst_controller_002 (
+	) rst_controller_004 (
 		.reset_in0      (~reset_reset_n),                     // reset_in0.reset
 		.reset_in1      (master_0_master_reset_reset),        // reset_in1.reset
-		.clk            (pll_0_outclk1_clk),                  //       clk.clk
-		.reset_out      (rst_controller_002_reset_out_reset), // reset_out.reset
+		.clk            (pll_sdram_outclk1_clk),              //       clk.clk
+		.reset_out      (rst_controller_004_reset_out_reset), // reset_out.reset
 		.reset_req      (),                                   // (terminated)
 		.reset_req_in0  (1'b0),                               // (terminated)
 		.reset_req_in1  (1'b0),                               // (terminated)
